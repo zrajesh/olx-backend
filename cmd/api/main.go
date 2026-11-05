@@ -4,9 +4,13 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/zrajesh/olx-backend/internal/config"
 )
 
 func main() {
+	cfg := config.MustLoad()
+  
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -16,7 +20,7 @@ func main() {
 	})
 
 	srv := http.Server{
-		Addr:   ":3030",
+		Addr:   ":" + cfg.Port,
 		Handler: mux,
 		ReadTimeout: time.Second * 10,
 		WriteTimeout: time.Second * 30,
