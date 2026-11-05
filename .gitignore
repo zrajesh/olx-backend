@@ -1,3 +1,5 @@
 bin
 env
 .env
+.neon
+node_modules/

@@ -6,18 +6,20 @@ import (
 	"time"
 
 	"github.com/zrajesh/olx-backend/internal/config"
+	"github.com/zrajesh/olx-backend/internal/db"
+	"github.com/zrajesh/olx-backend/internal/handlers"
 )
 
 func main() {
 	cfg := config.MustLoad()
-  
+	_, dbErr := db.Connect(cfg.DatabaseURL)
+	if dbErr != nil {
+		log.Fatalf("Database connection failed: %v", dbErr)
+	}
+
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"status": "ok"}`))
-	})
+	mux.HandleFunc("/health", handlers.Health)
 
 	srv := http.Server{
 		Addr:   ":" + cfg.Port,
